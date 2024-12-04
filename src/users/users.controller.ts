@@ -6,17 +6,22 @@ import { UsersService } from './users.service';
 import { UpdateUserDTO } from './dtos/update-user.dto';
 import { Serialize, SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
-
+import { AuthService } from './auth.service';
 @Controller('auth')
 @Serialize(UserDto)
 export class UsersController {
 
-    constructor (private userService: UsersService) {}
+    constructor (private userService: UsersService, private authSerive:AuthService) {}
     @Post('/signup')
     createUser(@Body() body: CreateUserDTO) {
-        this.userService.create(body.email, body.password);
+       return this.authSerive.signup(body.email, body.password)
     }
 
+
+    @Post('/signin')
+    singin(@Body() body: CreateUserDTO) {
+       return this.authSerive.signin(body.email, body.password)
+    }
    
     @Get('/:id')
     getUser(@Param('id') id: string){
