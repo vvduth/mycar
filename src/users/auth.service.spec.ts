@@ -11,10 +11,21 @@ describe('Auth service', () => {
   beforeEach(async () => {
     // fake copy of user service
 
+    const users: User[] = [];
     fakeUserService = {
-      find: () => Promise.resolve([]),
-      create: (email: string, password: string) =>
-        Promise.resolve({ id: 1, email, password } as User),
+      find: (email: string) => {
+        const filteredUsers = users.filter((user) => user.email === email);
+        return Promise.resolve(filteredUsers);
+      },
+      create: (email: string, password: string) => {
+        const user = {
+          id: Math.floor(Math.random() * 999999),
+          email,
+          password,
+        } as User;
+        users.push(user);
+        return Promise.resolve(user);
+      },
     };
     const module = await Test.createTestingModule({
       providers: [
@@ -44,9 +55,8 @@ describe('Auth service', () => {
   });
 
   it('throws an error if user signs up with email that is in use', async () => {
-    fakeUserService.find = () =>
-      Promise.resolve([{ id: 1, email: 'a', password: '1' } as User]);
-    await expect(service.signup('asdf@asdf.com', 'asdf')).rejects.toThrow(
+    await service.signup('frontend@4real.com', 'sdadsadasdsa')
+    await expect(service.signup('frontend@4real.com', 'asdf')).rejects.toThrow(
       BadRequestException,
     );
   });
@@ -56,27 +66,20 @@ describe('Auth service', () => {
       service.signin('asdasd@gmail.com', 'dsadsadsdadas'),
     ).rejects.toThrow(NotFoundException);
   });
+
   it('throws if an invalid passworld is provided', async () => {
-    fakeUserService.find = () =>
-      Promise.resolve([
-        { email: 'asdf@asdf.com', password: 'laskdjf' } as User,
-      ]);
+    
+    await service.signup('devops@4real.com', 'asdcxacsa')
     await expect(
-      service.signin('laskdjf@alskdfj.com', 'passowrd'),
+      service.signin('devops@4real.com', 'passowrd'),
     ).rejects.toThrow(BadRequestException);
   });
-  it('return a user of correct password is provided', async () => {
-    fakeUserService.find = () =>
-      Promise.resolve([
-        {
-          email: 'backend@4real.com',
-          password:
-            '1831369ffa610c4f.93e657eb7ff040ec1d0d64d8de39faa1e782b670640b26e28be6f49a8fa1a400',
-        } as User,
-      ]);
 
-      const user  = await service.signin('backedn@4real.com','thisispassword123' )
-      expect(user).toBeDefined()
+  it('return a user of correct password is provided', async () => {
+    await service.signup('backedn@4real.com', 'thisispassword123')
+
+    const user = await service.signin('backedn@4real.com', 'thisispassword123');
+    expect(user).toBeDefined();
     // const user = await service.signup('test@4real.com', 'thisispassword123')
     // console.log(user)
   });
