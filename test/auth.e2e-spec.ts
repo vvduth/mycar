@@ -17,7 +17,7 @@ describe('Authentication system (e2e)', () => {
 
   it('handle a signup request', () => {
     const user = {
-        email: 'test123@test.com',
+        email: 'suka@test.com',
         password: 'password',
       };
    
