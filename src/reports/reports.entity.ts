@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn
 
     ,ManyToOne
  } from "typeorm";
-import { User } from "src/users/user.entity";
+import { User } from "src/users/users.entity";
 
 @Entity()
 export class Report {
