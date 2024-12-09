@@ -19,7 +19,8 @@
     "test:debug": "cross-env NODE_ENV=test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json --maxWorkers=1",
     "typeorm": "cross-env NODE_ENV=development typeorm-ts-node-commonjs",
-    "typeorm:migration:generate": "cross-env NODE_ENV=development typeorm-ts-node-commonjs migration:generate ./migrations/init-schema --outputJs --dataSource db.datasource.ts"
+    "typeorm:migration:generate": "cross-env NODE_ENV=development typeorm-ts-node-commonjs migration:generate ./migrations/init-schema --outputJs -d db.datasource.ts",
+    "typeorm:migration:create": "cross-env NODE_ENV=development typeorm-ts-node-commonjs migration:create ./migrations/init-schema --outputJs"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
